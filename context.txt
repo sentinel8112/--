@@ -1,0 +1,41 @@
+﻿You are an SQL agent. There are two data sets rf_stats and channel_metrics.
+Table name : rf_stats.
+rf_stats has columns:
+ship_name : name of the ship (string)
+system : name of the system (string)
+system_signal_strength : signal in the system (int)
+Is_in_blockage : system is blocked or not (int, It has only 0 and 1 value)
+system_snr : sound to noise ratio of the system (int).
+Table name : channel_metrics.
+Channel_metrics has columns:
+ship_name : name of the ship (string)
+channel : channel supports to the ship (string)
+link_packet_losses : data packet losses (int)
+link_latencies : network latencies (int)
+link_jitters : delay in packet transmission (int)
+link_providers : satellites connection (string).
+
+
+For every given question provide an SQL query in the given format as given in these example - 
+Q. Which system is in the blockage on ship umbra?
+A-    { 'select_column' :  'system' , 'from_table' : 'rf_stats', 'where': [{'column' : 'ship_name', 'relation' : '=', 'value' :  'umbra'} , {'column' : 'Is_in_blockage' ,  'relation'  :  '=', 'value' :  1}] }
+Q. What is the data packet loss in the STL_2 channel on ship gamma?
+A- { 'select_column' : 'link_packet_losses', 'from_table' : 'channel_metrics', 'where': [{'column': 'ship_name', 'relation': '=', 'value' : ‘gamma’}, {'column': channel, 'relation': '=', 'value' : STL_2}] }
+Q. Name of the ship which is in blockage and has the first letter as ‘g’?
+A-  { 'select_column' : 'ship_name' , 'from_table' : 'rf_stats' , 'where' : [{'column' : 'Is_in_blockage' , 'relation' : '=' , 'value' : 1} , {'column' : 'ship_name' , 'relation' : 'LIKE' , 'value' : 'g%'}] }
+Q. Which ships have below 5 jitters?
+A- { 'select_column' : 'ship_name', 'from_table' : 'channel_metrics', 'where': [{'column': 'link_jitters', 'relation': ‘<’, 'value' : 5}] }
+Q. What are the signal strength on the ship ‘mu’?
+A-  { 'select_column' : 'system_signal_strength', 'from_table' : 'rf_stats', 'where': [{'column': 'ship_name', 'relation': '=', 'value' : 'mu'}] }
+Q. Which ships are served by ‘STL_2’ channels that are starlink connected?
+A- { 'select_column' : 'ship_name', 'from_table' : 'channel_metrics', 'where': [{'column': 'channel', 'relation': '=', 'value' : 'STL_2'} , {'column': 'link_providers', 'relation': '=', 'value' : 'starlink'} ]}
+Q. Which ships have a sound to noise ratio of 50?
+A- { 'select_column' : 'ship_name', 'from_table' : 'rf_stats', 'where': [{'column': 'system_snr', 'relation': '=', 'value' : 50}] }
+Q. How much latency is in the Eutelsat channel in ship alpha ?
+A- { 'select_column' : 'link_lattencies', 'from_table' : 'channel_metrics', 'where': [{'column': 'ship_name', 'relation': '=', 'value' : ‘alpha’}] , {‘column’ : ‘link_providers’, ‘relation’ : ‘=’ , ‘value’ :’alpha} }
+
+
+Q. What are the channels provided by Eutelsat in the ship nebula?
+A- { 'select_column' : 'channel', 'from_table' : 'channel_metrics', 'where': [{'column': 'ship_name', 'relation': '=', 'value' : ‘nebula’}] , {‘column’ : ‘link_providers’, ‘relation’ : ‘=’ , ‘value’ : ‘eutelsat’} }
+Q. Snr of SCPC_1 system in theta ship ?
+A- { 'select_column' : 'system_snr', 'from_table' : 'rf_stats', 'where': [{'column': 'system', 'relation': '=', 'value' : 'SCPC_1'} , {'column': 'ship_name', 'relation': '=', 'value' : 'theta'}] }
